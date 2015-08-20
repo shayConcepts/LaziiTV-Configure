@@ -1,0 +1,348 @@
+{% extends "base.html" %}
+{% block content %}
+
+        <div id="successAlert" style="display: none;" class="alert alert-success" role="alert">Successfully Saved!</div>
+
+        <div class="row">
+            <div class="col-sm-3 lazii_row">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 id="mode_label" class="panel-title" style="padding-bottom: 5px;">Modes</h3>
+                        <button type="button" class="btn btn-xs btn-danger" onclick="deleteMode();"><span class="glyphicon glyphicon-remove" aria-hidden="true"></button>
+              <button onclick="modeUp()" type="button" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span></button>
+                        <button onclick="modeDown()" type="button" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span></button>
+                    </div>
+                    <div class="panel-body">
+                        <div class="input-group" style="padding-bottom: 10px;">
+                            <input id="newMode" type="text" class="form-control" placeholder="Mode">
+                            <span class="input-group-btn">
+                    <button onclick="addMode()" class="btn btn-success" type="button"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+                            </span>
+                        </div>
+                        <!-- /input-group -->
+                        <select id="modeSelect" onchange="modeChange()" class="form-control" size="10" name="selectionField" multiple="no">
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-sm-3 lazii_row" style="padding-left: 10px">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title" style="padding-bottom: 5px;">Channels</h3>
+                        <button onclick="deleteChannel()" type="button" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-remove" aria-hidden="true"></button>
+                            <button onclick="channelUp()" type="button" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span></button>
+                        <button onclick="channelDown()" type="button" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span></button>
+                    </div>
+                    <div class="panel-body">
+                        <div class="input-group" style="padding-bottom: 10px;">
+                            <input id="newChannel" type="text" class="form-control" placeholder="Channel">
+                            <span class="input-group-btn">
+                                <button onclick="addChannel()" class="btn btn-success" type="button"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+                            </span>
+                        </div>
+                        <!-- /input-group -->
+
+                        <select id="channelSelect" onchange="channelChange()" class="form-control" size="10" name="selectionField" multiple="no">
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="col-sm-6 lazii_row" style="padding-left: 10px">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title" style="padding-bottom: 5px;">Folders</h3>
+                        <button onclick="deleteFolder()" type="button" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-remove" aria-hidden="true"></button>
+                    </div>
+                    <div class="panel-body">
+                        <div class="input-group" style="padding-bottom: 10px;">
+                            <span class="input-group-btn">
+                                <button onclick="addFolder()" class="btn btn-success navbar-right" type="button"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+                            </span>
+                        </div>
+                    <!-- /input-group -->
+
+                        <select id="folderSelect" class="form-control" size="10" name="selectionField" multiple="no">
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+
+    </div>
+    <!-- /row -->
+
+    <div class="row">
+        <button onclick="saveChannels()" class="btn btn-success pull-right" type="button">Save</button>
+    </div>
+
+
+    <input style="display:none;" name="channelData" placeholder="question one">
+    <script>
+        <!--
+        var channel_data = "{{ channel_data }}";
+        //Data is sent encoded in base64. Decode it now.
+        channel_data = window.atob(channel_data);
+
+        var channel_json = JSON.parse(channel_data);
+        //document.getElementById("temp").innerText = obj[0]["ITEM ONE"][0]["SUB ONE"][0];
+
+        function loadModes() {
+            document.getElementById("channelSelect").innerHTML = ""
+            document.getElementById("folderSelect").innerHTML = ""
+            document.getElementById("modeSelect").innerHTML = ""
+            var i;
+            for (i = 0; i < channel_json.length; i++) {
+                var mode_name = Object.keys(channel_json[i])[0];
+                newOption = document.createElement('option');
+                newOption.innerHTML = mode_name;
+                document.getElementById("modeSelect").appendChild(newOption);
+            }
+        }
+        loadModes()
+
+        function addFolder() {
+            var ajaxRequest; // The variable that makes Ajax possible!
+
+            try {
+                // Opera 8.0+, Firefox, Safari
+                ajaxRequest = new XMLHttpRequest();
+            } catch (e) {
+                alert("Server could not be reached. Restart LaziiTV Configure.");
+                return false;
+            }
+            // Create a function that will receive data sent from the server
+            ajaxRequest.onreadystatechange = function() {
+                if (ajaxRequest.readyState == 4) {
+                    // Get the data from the server's response
+                    var folderPath = ajaxRequest.responseText;
+                    getSelectedChannelArray().push(folderPath);
+                    channelChange();
+                }
+            }
+            ajaxRequest.open("GET", "/add_folder/", true);
+            ajaxRequest.send(null);
+        }
+
+        function saveChannels() {
+
+            var json_string = JSON.stringify(channel_json);
+            json_string = window.btoa(json_string);
+
+            var ajaxRequest; // The variable that makes Ajax possible!
+
+            try {
+                // Opera 8.0+, Firefox, Safari
+                ajaxRequest = new XMLHttpRequest();
+
+
+
+            } catch (e) {
+                alert("Server could not be reached. Restart LaziiTV Configure.");
+                return false;
+            }
+            // Create a function that will receive data sent from the server
+            ajaxRequest.onreadystatechange = function() {
+                if (ajaxRequest.readyState == 4) {
+                    // Get the data from the server's response
+                    var response = ajaxRequest.responseText;
+                    //$('#successAlert').show();
+                    document.getElementById('successAlert').style.display = 'block';
+                    setTimeout(function() {
+                        document.getElementById('successAlert').style.display = 'none';
+                    }, 1500);
+                }
+            }
+            ajaxRequest.open("POST", "/save_channels/", true);
+            ajaxRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            ajaxRequest.send("channelData=" + json_string);
+        }
+
+        function getSelectedModeName() {
+            var modeSelection = document.getElementById("modeSelect");
+            return modeSelection.options[modeSelection.selectedIndex].value;
+        }
+
+        function getSelectedModeIndex() {
+            var modeSelection = document.getElementById("modeSelect");
+            return modeSelection.selectedIndex;
+        }
+
+        function getSelectedModeArray() {
+            return channel_json[getSelectedModeIndex()][getSelectedModeName()];
+        }
+
+        function getSelectedChannelName() {
+            var channelSelection = document.getElementById("channelSelect");
+            return channelSelection.options[channelSelection.selectedIndex].value;
+        }
+
+        function getSelectedChannelIndex() {
+            var channelSelection = document.getElementById("channelSelect");
+            return channelSelection.selectedIndex;
+        }
+
+        function getSelectedChannelArray() {
+            var selectedModeArray = getSelectedModeArray();
+            return selectedModeArray[getSelectedChannelIndex()][getSelectedChannelName()];
+        }
+
+        function getSelectedFolderName() {
+            var folderSelection = document.getElementById("folderSelect");
+            return folderSelection.options[folderSelection.selectedIndex].value;
+        }
+
+        function getSelectedFolderIndex() {
+            var folderSelection = document.getElementById("folderSelect");
+            return folderSelection.selectedIndex;
+        }
+
+        function modeChange() {
+            //Erase current channels
+            document.getElementById("channelSelect").innerHTML = ""
+            document.getElementById("folderSelect").innerHTML = ""
+
+            //Loop through all channel_data JSON
+            cur_mode = getSelectedModeArray();
+            var j;
+
+            //Loop through channels
+            for (j = 0; j < cur_mode.length; j++) {
+                channel_name = Object.keys(cur_mode[j])[0];
+                newOption = document.createElement('option');
+                newOption.innerHTML = channel_name;
+                document.getElementById("channelSelect").appendChild(newOption);
+            }
+
+        }
+
+
+        function channelChange() {
+            //Erase current channels
+            document.getElementById("folderSelect").innerHTML = "";
+
+            var selectedMode = getSelectedModeName();
+            var selectedChannel = getSelectedChannelName();
+
+            curMode = getSelectedModeArray();
+            var j;
+            //Loop through channels
+            for (j = 0; j < curMode.length; j++) {
+                var curChannel = curMode[j];
+                channelName = Object.keys(curChannel)[0];
+                if (channelName == selectedChannel) {
+                    curChannel = curChannel[channelName];
+
+                    var k;
+                    for (k = 0; k < curChannel.length; k++) {
+                        folderName = curChannel[k];
+                        newOption = document.createElement('option');
+                        newOption.innerHTML = folderName;
+                        document.getElementById("folderSelect").appendChild(newOption);
+                    }
+                }
+            }
+
+        }
+
+        function isDuplicateMode(modeName) {
+
+        }
+
+        function addMode() {
+            var newModeName = document.getElementById('newMode').value;
+            newModeName = newModeName.trim();
+            if(newModeName != ""){
+                var newMode = {};
+                newMode[newModeName] = [];
+                channel_json.push(newMode);
+                loadModes();
+            }
+        }
+
+        function addChannel() {
+            var newChannelName = document.getElementById('newChannel').value;
+            newChannelName = newChannelName.trim()
+            if(newChannelName != ""){
+                var newChannel = {};
+                newChannel[newChannelName] = [];
+                var mode = getSelectedModeArray();
+                mode.push(newChannel);
+                modeChange();
+            }
+        }
+
+        function deleteMode() {
+            var modeIndex = getSelectedModeIndex();
+
+            channel_json.splice(modeIndex, 1);
+            loadModes();
+        }
+
+        function deleteChannel() {
+            var channelIndex = getSelectedChannelIndex();
+            var chosenMode = getSelectedModeArray();
+            chosenMode.splice(channelIndex, 1);
+            modeChange();
+        }
+
+        function deleteFolder() {
+            var selectedChannel = getSelectedChannelArray();
+            var folderIndex = getSelectedFolderIndex();
+            selectedChannel.splice(folderIndex, 1);
+            channelChange();
+        }
+
+        function modeUp() {
+            var modeIndex = getSelectedModeIndex();
+            if (modeIndex != 0) {
+                var selectedMode = channel_json[modeIndex];
+                channel_json[modeIndex] = channel_json[modeIndex - 1];
+                channel_json[modeIndex - 1] = selectedMode;
+                loadModes();
+            }
+        }
+
+        function modeDown() {
+            var modeIndex = getSelectedModeIndex();
+            if (modeIndex != channel_json.length - 1) {
+                var selectedMode = channel_json[modeIndex]
+                channel_json[modeIndex] = channel_json[modeIndex + 1]
+                channel_json[modeIndex + 1] = selectedMode
+                loadModes()
+            }
+        }
+
+        function channelUp() {
+            var selectedMode = getSelectedModeArray();
+            var channelIndex = getSelectedChannelIndex();
+
+            if (channelIndex != 0) {
+                var selectedChannel = selectedMode[channelIndex]
+                selectedMode[channelIndex] = selectedMode[channelIndex - 1]
+                selectedMode[channelIndex - 1] = selectedChannel
+                modeChange()
+            }
+        }
+
+        function channelDown() {
+            var selectedMode = getSelectedModeArray();
+            var channelIndex = getSelectedChannelIndex();
+
+            if (channelIndex != selectedMode.length - 1) {
+                var selectedChannel = selectedMode[channelIndex]
+                selectedMode[channelIndex] = selectedMode[channelIndex + 1]
+                selectedMode[channelIndex + 1] = selectedChannel
+                modeChange()
+            }
+        }
+
+
+        -->
+    </script>
+
+{% endblock %}
