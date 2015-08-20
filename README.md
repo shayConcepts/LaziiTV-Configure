@@ -11,4 +11,7 @@ pyGTK
 gtk  
 gobject  
 cefPython    
-[Microsoft Visual C++ 2010 Redistributable Package (x86)](http://www.microsoft.com/en-us/download/details.aspx?id=5555)  
+[Microsoft Visual C++ 2010 Redistributable Package (x64)](http://www.microsoft.com/en-us/download/details.aspx?id=14632)  
+LaziiTV
+==
+Checkout the other application [LaziiTV](https://github.com/shayConcepts/LaziiTV)
