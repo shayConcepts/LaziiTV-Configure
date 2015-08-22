@@ -145,7 +145,7 @@ class PyGTKExample:
 
         table = gtk.Table(3, 1, homogeneous=False)
         self.mainWindow.add(table)
-        table.attach(self.searchEntry, 0, 1, 1, 2, yoptions=gtk.SHRINK)
+        #table.attach(self.searchEntry, 0, 1, 1, 2, yoptions=gtk.SHRINK)
         table.attach(self.container, 0, 1, 2, 3)
         table.show()
 
