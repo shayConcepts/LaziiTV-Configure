@@ -71,6 +71,12 @@ def open_link(url):
     return True
 
 
+@app.route('/launch_laziitv/', methods=['POST'])
+def launch_laziitv():
+
+    return "Success"
+
+
 @app.route('/launch_link/', methods=['POST'])
 def launch_link():
     url = request.form["url"]
