@@ -19,6 +19,7 @@ import gtk
 import thread
 import base64
 import json
+import webbrowser
 app = Flask(__name__)
 
 files = None
@@ -48,6 +49,36 @@ class FileChooserProcess(multiprocessing.Process):
         elif self.response == gtk.RESPONSE_CANCEL:
             print 'Closed, no files selected'
 '''
+
+
+def open_link(url):
+    """
+    Launches the URL in a web browser
+
+    Keyword Arguments:
+    url -- String. URL to launch
+
+    Returns:
+    True -- Browser opened
+    False -- Browser not opened
+    """
+
+    try:
+        webbrowser.open(url, new=2)
+    except:
+        return False
+
+    return True
+
+
+@app.route('/launch_link/', methods=['POST'])
+def launch_link():
+    url = request.form["url"]
+    url = base64.b64decode(url)
+    open_link(url)
+
+    return "Success"
+
 
 @app.route('/add_folder/', methods=['GET'])
 def add_folder():
