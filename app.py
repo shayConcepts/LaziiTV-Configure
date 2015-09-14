@@ -25,7 +25,7 @@ app = Flask(__name__)
 files = None
 
 # The version of LaziiTV that will be installed
-version = "0.9.1"
+version = "1.0.0"
 
 '''
 class FileChooserProcess(multiprocessing.Process):
