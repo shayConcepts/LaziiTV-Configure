@@ -95,11 +95,7 @@
             if (ajaxRequest.readyState == 4) {
                 // Get the data from the server's response
                 var response = ajaxRequest.responseText;
-                //$('#successAlert').show();
-                document.getElementById('successAlert').style.display = 'block';
-                setTimeout(function() {
-                    document.getElementById('successAlert').style.display = 'none';
-                }, 1500);
+
             }
         }
         ajaxRequest.open("POST", "/launch_laziitv/", true);
