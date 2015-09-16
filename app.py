@@ -20,6 +20,8 @@ import thread
 import base64
 import json
 import webbrowser
+import subprocess
+import sys
 app = Flask(__name__)
 
 files = None
@@ -69,6 +71,17 @@ def open_link(url):
         return False
 
     return True
+
+
+@app.route('/launch_laziitv/', methods=['POST'])
+def launch_laziitv():
+    subprocess.Popen("laziitv.exe", shell=True,
+                     stdin=None,
+                     stdout=None,
+                     stderr=None,
+                     close_fds=True)
+
+    return "Success"
 
 
 @app.route('/launch_link/', methods=['POST'])
