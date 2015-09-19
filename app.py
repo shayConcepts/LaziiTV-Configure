@@ -5,30 +5,27 @@
 #     Description: The Flask server that powers LaziiTV Configure
 # -----------------------------------
 
-
-from flask import render_template
-from flask import request
-from flask import url_for
-from flask import Flask
-import multiprocessing
 '''
 import pygtk
 pygtk.require('2.0')
 import gtk
 '''
-import thread
-import base64
+
 import json
-import webbrowser
+import base64
 import subprocess
-import sys
-import Tkinter as tk
+import webbrowser
 import tkFileDialog
+import Tkinter as tk
 
-import load_extensions
+from flask import Flask
+from flask import request
+from flask import render_template
+
 import load_bindings
-app = Flask(__name__)
+import load_extensions
 
+app = Flask(__name__)
 files = None
 
 # The version of LaziiTV that will be installed
@@ -180,7 +177,9 @@ def get_settings():
     extensions_data = load_extensions.load_file_extensions()
     bindings_data = load_bindings.load_key_bindings()
 
-    return render_template('settings.html', bindings_data=bindings_data, extensions_data=extensions_data)
+    return render_template('settings.html',
+                           bindings_data=bindings_data,
+                           extensions_data=extensions_data)
 
 
 @app.route('/how/', methods=['GET'])
@@ -202,7 +201,11 @@ def save_channels():
 
     # Must reload it in order to pretty print
     channel_data = json.loads(channel_data)
-    channel_data = json.dumps(channel_data, sort_keys=True, indent=4, separators=(',', ': '))
+    channel_data = json.dumps(channel_data,
+                              sort_keys=True,
+                              indent=4,
+                              separators=(',', ': '))
+
     open("channel_data.json", "w").write(channel_data)
     return "Success"
 
@@ -214,7 +217,11 @@ def save_extensions():
 
     # Must reload it in order to pretty print
     extension_data = json.loads(extension_data)
-    extension_data = json.dumps(extension_data, sort_keys=True, indent=4, separators=(',', ': '))
+    extension_data = json.dumps(extension_data,
+                                sort_keys=True,
+                                indent=4,
+                                separators=(',', ': '))
+
     open("file_extensions.json", "w").write(extension_data)
     return "Success"
 
@@ -226,7 +233,11 @@ def save_bindings():
 
     # Must reload it in order to pretty print
     bindings_data = json.loads(bindings_data)
-    bindings_data = json.dumps(bindings_data, sort_keys=True, indent=4, separators=(',', ': '))
+    bindings_data = json.dumps(bindings_data,
+                               sort_keys=True,
+                               indent=4,
+                               separators=(',', ': '))
+
     open("key_bindings.json", "w").write(bindings_data)
     return "Success"
 

@@ -8,6 +8,7 @@
 import json
 import base64
 
+
 def load_default_extensions():
     """
     Loads the default file extensions
