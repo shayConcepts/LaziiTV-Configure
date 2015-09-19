@@ -22,6 +22,8 @@ import json
 import webbrowser
 import subprocess
 import sys
+import Tkinter as tk
+import tkFileDialog
 app = Flask(__name__)
 
 files = None
@@ -96,8 +98,10 @@ def launch_link():
 @app.route('/add_folder/', methods=['GET'])
 def add_folder():
 
-    import Tkinter as tk
-    import tkFileDialog
+    try:
+        saved_path = open("saved_path.ini", "r").read()
+    except:
+        saved_path = "C:\\"
     root = tk.Tk()
     root.withdraw()
     root.overrideredirect(True)
@@ -105,9 +109,15 @@ def add_folder():
     root.deiconify()
     root.lift()
     root.focus_force()
-    file_path = tkFileDialog.askdirectory()
+    file_path = tkFileDialog.askdirectory(initialdir=saved_path)
     root.destroy()
-
+    try:
+        if file_path == "":
+            open("saved_path.ini", "w").write(saved_path)
+        else:
+            open("saved_path.ini", "w").write(file_path)
+    except:
+        pass
     print("FILEPATH:" + file_path)
 
     """

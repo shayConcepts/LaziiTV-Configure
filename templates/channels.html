@@ -139,8 +139,10 @@
             if (ajaxRequest.readyState == 4) {
                 // Get the data from the server's response
                 var folderPath = ajaxRequest.responseText;
-                getSelectedChannelArray().push(folderPath);
-                channelChange();
+                if(folderPath != ""){
+                  getSelectedChannelArray().push(folderPath);
+                  channelChange();
+                }
             }
         }
         ajaxRequest.open("GET", "/add_folder/", true);
