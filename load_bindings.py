@@ -6,6 +6,30 @@
 # ---------------------
 
 import json
+import base64
+
+
+def load_default_bindings():
+    """
+    Loads the default bindings
+    """
+
+    bindings = {
+        "change_display": 68,
+        "change_mode_bind": 77,
+        "channel_down_bind": 65,
+        "channel_up_bind": 81,
+        "info_bind": 73,
+        "play_pause_bind": 32,
+        "previous_video": 84,
+        "quit_bind": 27,
+        "refresh_bind": 82,
+        "skip_backward_bind": 87,
+        "skip_forward_bind": 69,
+        "stop_bind": 83
+    }
+
+    return bindings
 
 
 def load_key_bindings():
@@ -18,12 +42,29 @@ def load_key_bindings():
 
     print "Loading Key Bindings"
 
-    json_string = open("key_bindings.json", "r").read()
-    key_bindings = json.loads(json_string)
+    try:
+        key_bindings = open("key_bindings.json", "r").read()
+    except:
+        key_bindings = load_default_bindings()
+    else:
+        key_bindings = json.loads(key_bindings)
 
-    print "\tSuccess -- Key Bindings Loaded"
+        # Add missing/new bindings
+        default_bindings = load_default_bindings()
+        for key in default_bindings:
+            value = default_bindings[key]
+            if key not in key_bindings:
+                key_bindings[key] = value
 
-    return key_bindings
+    key_bindings = json.dumps(key_bindings)
+    key_bindings = key_bindings.splitlines()
+    bindings_data = ""
+    for line in key_bindings:
+        bindings_data += line
+
+    bindings_data = base64.b64encode(bindings_data)
+
+    return bindings_data
 
 
 if __name__ == "__main__":

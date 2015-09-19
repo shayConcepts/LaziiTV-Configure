@@ -1,15 +1,15 @@
-{% extends "base.html" %}
-{% block content %}
-        <div class="row">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <h3 style="margin-top: 3px;">LaziiTV v{{ version }}</h3>
-                    <p>
-                        created by Andrew Shay<br>
-                        http://shayConcepts.com
-                    </p>
-                </div>
-            </div>
+{% extends "base.html" %} {% block content %}
+<div class="row">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <h3 style="margin-top: 3px;">LaziiTV v{{ version }}</h3>
+            <p>
+                created by Andrew Shay
+                <br>
+                <span class="externalLink" onclick="launchLink('http://shayConcepts.com')">shayConcepts.com</span>
+            </p>
         </div>
-        <!-- /row -->
+    </div>
+</div>
+<!-- /row -->
 {% endblock %}

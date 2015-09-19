@@ -5,26 +5,31 @@
 #     Description: The Flask server that powers LaziiTV Configure
 # -----------------------------------
 
-
-from flask import render_template
-from flask import request
-from flask import url_for
-from flask import Flask
-import multiprocessing
 '''
 import pygtk
 pygtk.require('2.0')
 import gtk
 '''
-import thread
-import base64
-import json
-app = Flask(__name__)
 
+import json
+import base64
+import subprocess
+import webbrowser
+import tkFileDialog
+import Tkinter as tk
+
+from flask import Flask
+from flask import request
+from flask import render_template
+
+import load_bindings
+import load_extensions
+
+app = Flask(__name__)
 files = None
 
 # The version of LaziiTV that will be installed
-version = "0.9.1"
+version = "1.0.0"
 
 '''
 class FileChooserProcess(multiprocessing.Process):
@@ -49,11 +54,54 @@ class FileChooserProcess(multiprocessing.Process):
             print 'Closed, no files selected'
 '''
 
+
+def open_link(url):
+    """
+    Launches the URL in a web browser
+
+    Keyword Arguments:
+    url -- String. URL to launch
+
+    Returns:
+    True -- Browser opened
+    False -- Browser not opened
+    """
+
+    try:
+        webbrowser.open(url, new=2)
+    except:
+        return False
+
+    return True
+
+
+@app.route('/launch_laziitv/', methods=['POST'])
+def launch_laziitv():
+    subprocess.Popen("laziitv.exe", shell=True,
+                     stdin=None,
+                     stdout=None,
+                     stderr=None,
+                     close_fds=True)
+
+    return "Success"
+
+
+@app.route('/launch_link/', methods=['POST'])
+def launch_link():
+    url = request.form["url"]
+    url = base64.b64decode(url)
+    open_link(url)
+
+    return "Success"
+
+
 @app.route('/add_folder/', methods=['GET'])
 def add_folder():
 
-    import Tkinter as tk
-    import tkFileDialog
+    try:
+        saved_path = open("saved_path.ini", "r").read()
+    except:
+        saved_path = "C:\\"
     root = tk.Tk()
     root.withdraw()
     root.overrideredirect(True)
@@ -61,9 +109,15 @@ def add_folder():
     root.deiconify()
     root.lift()
     root.focus_force()
-    file_path = tkFileDialog.askdirectory()
+    file_path = tkFileDialog.askdirectory(initialdir=saved_path)
     root.destroy()
-
+    try:
+        if file_path == "":
+            open("saved_path.ini", "w").write(saved_path)
+        else:
+            open("saved_path.ini", "w").write(file_path)
+    except:
+        pass
     print("FILEPATH:" + file_path)
 
     """
@@ -120,23 +174,12 @@ def index():
 
 @app.route('/settings/', methods=['GET'])
 def get_settings():
-    file_extensions = open("file_extensions.json", "r").read()
-    file_extensions = file_extensions.splitlines()
-    extensions_data = ""
-    for line in file_extensions:
-        extensions_data += line
+    extensions_data = load_extensions.load_file_extensions()
+    bindings_data = load_bindings.load_key_bindings()
 
-    extensions_data = base64.b64encode(extensions_data)
-
-    key_bindings = open("key_bindings.json", "r").read()
-    key_bindings = key_bindings.splitlines()
-    bindings_data = ""
-    for line in key_bindings:
-        bindings_data += line
-
-    bindings_data = base64.b64encode(bindings_data)
-
-    return render_template('settings.html', bindings_data=bindings_data, extensions_data=extensions_data)
+    return render_template('settings.html',
+                           bindings_data=bindings_data,
+                           extensions_data=extensions_data)
 
 
 @app.route('/how/', methods=['GET'])
@@ -158,7 +201,11 @@ def save_channels():
 
     # Must reload it in order to pretty print
     channel_data = json.loads(channel_data)
-    channel_data = json.dumps(channel_data, sort_keys=True, indent=4, separators=(',', ': '))
+    channel_data = json.dumps(channel_data,
+                              sort_keys=True,
+                              indent=4,
+                              separators=(',', ': '))
+
     open("channel_data.json", "w").write(channel_data)
     return "Success"
 
@@ -170,7 +217,11 @@ def save_extensions():
 
     # Must reload it in order to pretty print
     extension_data = json.loads(extension_data)
-    extension_data = json.dumps(extension_data, sort_keys=True, indent=4, separators=(',', ': '))
+    extension_data = json.dumps(extension_data,
+                                sort_keys=True,
+                                indent=4,
+                                separators=(',', ': '))
+
     open("file_extensions.json", "w").write(extension_data)
     return "Success"
 
@@ -182,7 +233,11 @@ def save_bindings():
 
     # Must reload it in order to pretty print
     bindings_data = json.loads(bindings_data)
-    bindings_data = json.dumps(bindings_data, sort_keys=True, indent=4, separators=(',', ': '))
+    bindings_data = json.dumps(bindings_data,
+                               sort_keys=True,
+                               indent=4,
+                               separators=(',', ': '))
+
     open("key_bindings.json", "w").write(bindings_data)
     return "Success"
 
