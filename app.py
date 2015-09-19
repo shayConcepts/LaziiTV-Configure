@@ -24,6 +24,9 @@ import subprocess
 import sys
 import Tkinter as tk
 import tkFileDialog
+
+import load_extensions
+import load_bindings
 app = Flask(__name__)
 
 files = None
@@ -174,21 +177,8 @@ def index():
 
 @app.route('/settings/', methods=['GET'])
 def get_settings():
-    file_extensions = open("file_extensions.json", "r").read()
-    file_extensions = file_extensions.splitlines()
-    extensions_data = ""
-    for line in file_extensions:
-        extensions_data += line
-
-    extensions_data = base64.b64encode(extensions_data)
-
-    key_bindings = open("key_bindings.json", "r").read()
-    key_bindings = key_bindings.splitlines()
-    bindings_data = ""
-    for line in key_bindings:
-        bindings_data += line
-
-    bindings_data = base64.b64encode(bindings_data)
+    extensions_data = load_extensions.load_file_extensions()
+    bindings_data = load_bindings.load_key_bindings()
 
     return render_template('settings.html', bindings_data=bindings_data, extensions_data=extensions_data)
 
