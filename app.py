@@ -1,5 +1,6 @@
 # -----------------------------------
 #     app.py
+#     version: 1.0.1
 #     Author: Andrew Shay
 #     Created: June 10 2012
 #     Description: The Flask server that powers LaziiTV Configure
@@ -29,7 +30,7 @@ app = Flask(__name__)
 files = None
 
 # The version of LaziiTV that will be installed
-version = "1.0.0"
+version = "1.0.1"
 
 '''
 class FileChooserProcess(multiprocessing.Process):
