@@ -55,12 +55,10 @@ def open_link(url):
     """
     Launches the URL in a web browser
 
-    Keyword Arguments:
-    url -- String. URL to launch
-
-    Returns:
-    True -- Browser opened
-    False -- Browser not opened
+    :param url: URL to launch
+    :type url: string
+    :return: If browser opened
+    :rtype: boolean
     """
 
     try:
