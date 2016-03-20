@@ -150,6 +150,11 @@ def teardown_request(exception):
 
 @app.route('/', methods=['GET'])
 def index():
+
+    # Creates defaults if they don't exist
+    load_extensions.load_file_extensions()
+    load_bindings.load_key_bindings()
+
     try:
         json_data = open("channel_data.json", "r").read()
     except:

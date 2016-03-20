@@ -28,7 +28,6 @@ def load_default_extensions():
         ]
     }
 
-    extensions = json.dumps(extensions)
     return extensions
 
 
@@ -43,7 +42,10 @@ def load_file_extensions():
     try:
         file_extensions = open("file_extensions.json", "r").read()
     except:
-        file_extensions = load_default_extensions()
+        file_extensions = json.dumps(load_default_extensions())
+        open("file_extensions.json", "w").write(json.dumps(load_default_extensions(),
+                                                           indent=4,
+                                                           sort_keys=True))
 
     file_extensions = file_extensions.splitlines()
     extensions_data = ""
@@ -53,7 +55,3 @@ def load_file_extensions():
     extensions_data = base64.b64encode(extensions_data)
 
     return extensions_data
-
-if __name__ == "__main__":
-    extensions = load_file_extensions()
-    print(extensions)

@@ -46,6 +46,9 @@ def load_key_bindings():
         key_bindings = open("key_bindings.json", "r").read()
     except:
         key_bindings = load_default_bindings()
+        open("key_bindings.json", "w").write(json.dumps(key_bindings,
+                                                        indent=4,
+                                                        sort_keys=True))
     else:
         key_bindings = json.loads(key_bindings)
 
@@ -66,7 +69,3 @@ def load_key_bindings():
 
     return bindings_data
 
-
-if __name__ == "__main__":
-    key_bindings = load_key_bindings()
-    print(key_bindings)
