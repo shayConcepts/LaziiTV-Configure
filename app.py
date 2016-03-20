@@ -11,24 +11,21 @@ pygtk.require('2.0')
 import gtk
 '''
 
-import json
-import base64
-import os
-import subprocess
-import webbrowser
-import tkFileDialog
 import Tkinter as tk
-
-from flask import Flask
-from flask import request
-from flask import render_template
-
+import base64
+import json
 import load_bindings
 import load_extensions
+import os
+import subprocess
+import tkFileDialog
+import webbrowser
+from flask import Flask
+from flask import render_template
+from flask import request
 
 app = Flask(__name__)
 files = None
-
 
 '''
 class FileChooserProcess(multiprocessing.Process):
@@ -96,7 +93,6 @@ def launch_link():
 
 @app.route('/add_folder/', methods=['GET'])
 def add_folder():
-
     try:
         saved_path = open("saved_path.ini", "r").read()
     except:
@@ -246,6 +242,7 @@ def save_bindings():
 
     open("key_bindings.json", "w").write(bindings_data)
     return "Success"
+
 
 if __name__ == '__main__':
     app.run(host="localhost", port=5000, debug=True, use_reloader=True)
