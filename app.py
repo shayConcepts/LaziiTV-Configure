@@ -1,6 +1,5 @@
 # -----------------------------------
 #     app.py
-#     version: 1.0.1
 #     Author: Andrew Shay
 #     Created: June 10 2012
 #     Description: The Flask server that powers LaziiTV Configure
@@ -14,6 +13,7 @@ import gtk
 
 import json
 import base64
+import os
 import subprocess
 import webbrowser
 import tkFileDialog
@@ -29,8 +29,6 @@ import load_extensions
 app = Flask(__name__)
 files = None
 
-# The version of LaziiTV that will be installed
-version = "1.0.1"
 
 '''
 class FileChooserProcess(multiprocessing.Process):
@@ -190,7 +188,14 @@ def how():
 
 @app.route('/about/', methods=['GET'])
 def about():
-    global version
+    script_path = os.path.dirname(os.path.realpath(__file__))
+    version_path = os.path.join(script_path, "laziitv_version.txt")
+
+    try:
+        version = open(version_path, "r").read().splitlines()[0]
+    except Exception:
+        version = ""
+
     return render_template('about.html', version=version)
 
 
